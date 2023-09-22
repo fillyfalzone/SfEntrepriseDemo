@@ -4,9 +4,25 @@
 
 {% block body %}
     <h1> Liste des employés</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Employés</th>
+            </tr>
+        </thead>
+       
 
-    {% for employe in employes %}
-           <a href="{{path('show_employe', {'id':employe.id})}}">{{employe}}</a> <br><br>
-    {% endfor %}
-
+   
+        <tbody>
+            {% for employe in employes %}
+            <tr>
+                <td>
+                    <a href="{{path('show_employe', {'id':employe.id})}}">{{employe}}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
 {% endblock %}

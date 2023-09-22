@@ -1,0 +1,10 @@
+h1{
+    color: brown;
+}
+a{
+    text-decoration: none;
+}
+table tr {
+    border-collapse: collapse;
+    border: 1px solid;
+}
