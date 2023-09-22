@@ -26,29 +26,46 @@ class EmployeController extends AbstractController
 
      //create new form of employe CRUD
      #[Route('/employe/new', name: 'new_employe')]
-     public function new(Request $Request, EntityManagerInterface $entityManager): Response
+     #[Route('/employe/{id}/edit', name: 'edit_employe')]
+     public function new_edit(Employe $employe = null, Request $Request, EntityManagerInterface $entityManager): Response
      {
-         $employe = new Employe();
-         
-         $form = $this->createForm(EmployeType::class, $employe);
-         $form->handleRequest($Request);
+        // Si l'employé n'existe pas on va créer une nouvelle 
+        if (!$employe){
 
-         if ($form->isSubmitted() && $form->isValid()){
- 
-             $employe = $form->getData();
- 
-             // prepare PDO
-             $entityManager->persist($employe);
-             //execute PDO
-             $entityManager->flush();
-             
-             return $this->redirectToRoute('app_employe');
-         }
-         
-         return $this->render('employe/new.html.twig', [
-             'formAddEmploye' => $form
-         ]);
-     }
+            $employe = new Employe();
+        } 
+        
+        //si l'employé existe on va recuperer son id et mettre à jours les donnees
+        $form = $this->createForm(EmployeType::class, $employe);
+        $form->handleRequest($Request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $employe = $form->getData();
+
+            // prepare PDO
+            $entityManager->persist($employe);
+            //execute PDO
+            $entityManager->flush();
+            
+            return $this->redirectToRoute('app_employe');
+        }
+        
+        return $this->render('employe/new.html.twig', [
+            'formAddEmploye' => $form,
+            'edit' => $employe->getId()
+        ]);
+    }
+
+    #[Route('/employe/{id}/delete', name: 'delete_employe')]
+    public function delete(Employe $employe, EntityManagerInterface $entityManager)
+    {
+        
+        $entityManager->remove($employe);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_employe');
+    }
 
     #[Route('/employe/{id}', name: 'show_employe')]
     public function show(Employe $employe) : Response
