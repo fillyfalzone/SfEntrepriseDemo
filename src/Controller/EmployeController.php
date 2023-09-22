@@ -15,9 +15,17 @@ class EmployeController extends AbstractController
     {   
         // $employes = $employeRepository->findAll();
         // SELECT * FROM employe ORDER BY raisonSociale 
-        $employes = $employeRepository->findBy(["entreprise" => "1"], ["prenom" => "ASC"]);
+        $employes = $employeRepository->findBy([], ["prenom" => "ASC"]);
         return $this->render('employe/index.html.twig', [
             'employes' => $employes
+        ]);
+    }
+
+    #[Route('/employe/{id}', name: 'show_employe')]
+    public function show(Employe $employe) : Response
+    {
+        return $this->render('employe/show.html.twig', [
+            'employe' => $employe
         ]);
     }
 }

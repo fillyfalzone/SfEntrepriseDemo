@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EmployeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use SebastianBergmann\Diff\Diff;
 
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
 class Employe
@@ -29,6 +30,9 @@ class Employe
     #[ORM\ManyToOne(inversedBy: 'employes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $ville = null;
 
     public function getId(): ?int
     {
@@ -95,8 +99,28 @@ class Employe
         return $this;
     }
 
+    public function getVille(): ?string
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?string $ville): static
+    {
+        $this->ville = $ville;
+
+        return $this;
+    }
+
     public function __toString()
     {
         return $this->prenom. ' '. $this->nom ;
+    }
+
+    public function getAge(): ?string
+    {
+        $now = new \DateTime();
+        $interval = $this->dateNaissance->diff($now);
+        $age = $interval->format('%Y');
+        return $age.' ans';
     }
 }
